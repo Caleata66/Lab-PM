@@ -7,6 +7,28 @@ x db 57
 buffer db 10 dup('$')
 
 .code
+
+afisare proc
+    conv: dec si
+    xor dx, dx
+    mov bx,10
+    div bx
+    add dl,30h
+    mov [si],dl
+    cmp ax, 0
+    jne conv
+
+    mov dx, si
+    mov ah,9
+    int 21h
+
+    mov dl, ' '
+    mov ah,2
+    int 21h
+
+    ret
+afisare endp
+
 main proc
     mov ax, @data
     mov ds, ax
@@ -23,7 +45,8 @@ main proc
 
     f1:mov al,X
     mul al
-    jmp convert
+    call afisare
+    jmp final
 
     f2:mov al,X
     mov dx, 0
@@ -33,25 +56,9 @@ main proc
     mul bx
     mov bx,3
     div bx
+    call afisare
 
-    convert: dec si
-    xor dx, dx
-    mov bx,10
-    div bx
-    add dl,30h
-    mov [si],dl
-    cmp ax, 0
-    jne convert
-
-    mov dl, ' '
-    mov ah,2
-    int 21h
-
-    mov dx, si
-    mov ah,9
-    int 21h
-
-    mov ah,4ch
+    final: mov ah,4ch
     int 21h
     
 

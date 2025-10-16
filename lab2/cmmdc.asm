@@ -12,7 +12,7 @@ aux2 db 0
 
 .code
 
-convert proc
+afisare proc
     conv: dec si
     xor dx, dx
     mov bx,10
@@ -21,8 +21,17 @@ convert proc
     mov [si],dl
     cmp ax, 0
     jne conv
+
+    mov dx, si
+    mov ah,9
+    int 21h
+
+    mov dl, ' '
+    mov ah,2
+    int 21h
+
     ret
-convert endp
+afisare endp
 
 main proc
     mov ax, @data
@@ -52,35 +61,18 @@ main proc
     mov al, a
     mov cl, 0
 
-    mov si, offset buffer1 + 9
-    mov bl, '$'
-    mov [si], bl
-    call convert
-    jmp afisare
+    mov si, offset buffer1 + 8
+    call afisare
 
-    cmmmc:
     mov ax, 0 
     mov al, aux1
     mov bl, aux2
     mul bx
     mov bl, a
     div bx
-    mov cl, 1
 
-    mov si, offset buffer2 + 9
-    mov bl, '$'
-    mov [si], bl
-    call convert
-
-    afisare: mov dl, ' '
-    mov ah,2
-    int 21h
-
-    mov dx, si
-    mov ah,9
-    int 21h
-    cmp cl, 0
-    jz cmmmc
+    mov si, offset buffer2 + 8
+    call afisare
 
     mov ah,4ch
     int 21h
