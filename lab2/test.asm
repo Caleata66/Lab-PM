@@ -3,7 +3,7 @@ dosseg
 .stack 100h
 .data
 
-x db 9
+x db 11
 buffer db "$$$$"
 
 .code

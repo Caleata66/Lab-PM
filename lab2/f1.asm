@@ -3,7 +3,7 @@ dosseg
 .stack 100h
 .data
 
-x db 254
+x db 39
 buffer db "$$$$$$$$"
 
 .code
@@ -16,13 +16,14 @@ main proc
     mov [si], bl
 
     mov al, x
-    mov bl,2
-    div bl
-    cmp ah,1
-    je f2
+    RCR al,1
+    jc f2
 
     f1:mov al,X
     mul al
+    mov bl, x
+    add ax, bx
+    add ax, 5
     jmp convert
 
     f2:mov al,X
@@ -31,8 +32,7 @@ main proc
     mul ax
     mov bl,x
     mul bx
-    mov bx,3
-    div bx
+    sub ax, bx
 
     convert: dec si
     xor dx, dx
