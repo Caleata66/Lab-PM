@@ -3,10 +3,12 @@ dosseg
 .stack 100h
 .data
 
-a db 128
-b db 16
+a db 48
+b db 180
 buffer1 db 10 dup('$')
 buffer2 db 10 dup('$')
+aux1 db 0
+aux2 db 0
 
 .code
 
@@ -26,6 +28,11 @@ main proc
     mov ax, @data
     mov ds, ax
 
+    mov al, a
+    mov aux1, al
+    mov al, b
+    mov aux2, al
+
     w:mov al, a
     mov bl, b
     cmp al, b
@@ -41,6 +48,7 @@ main proc
     cond: cmp al, bl
     jne w
 
+    mov ax, 0
     mov al, a
     mov cl, 0
 
@@ -50,11 +58,13 @@ main proc
     call convert
     jmp afisare
 
-    cmmmc: mov al, a
-    mov bl, b
+    cmmmc:
+    mov ax, 0 
+    mov al, aux1
+    mov bl, aux2
     mul bx
     mov bl, a
-    div bl
+    div bx
     mov cl, 1
 
     mov si, offset buffer2 + 9
