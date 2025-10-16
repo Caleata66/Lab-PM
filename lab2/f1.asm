@@ -4,7 +4,7 @@ dosseg
 .data
 
 x db 39
-buffer db "$$$$$$$$"
+buffer db 10 dup('$')
 
 .code
 main proc

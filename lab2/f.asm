@@ -3,8 +3,8 @@ dosseg
 .stack 100h
 .data
 
-x db 254
-buffer db "$$$$$$$$"
+x db 57
+buffer db 10 dup('$')
 
 .code
 main proc
