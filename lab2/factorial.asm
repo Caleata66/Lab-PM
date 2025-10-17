@@ -3,14 +3,12 @@ dosseg
 .stack 100h
 .data
 
-a dw 1
-b dw 3
-c dw -6
+n dw 8
 buffer db 10 dup('$')
 
 .code
 
-afisare proc
+iafisare proc
     mov si, offset buffer + 9 
     mov cl, '$' 
     mov [si], cl
@@ -21,6 +19,40 @@ afisare proc
     neg ax
     mov cl, 1
 
+    iconv:
+    dec si
+    xor dx, dx
+    mov bx,10
+    div bx
+    add dl,30h
+    mov [si],dl
+    cmp ax, 0
+    jne iconv
+
+    cmp cl, 0
+    je iprint
+    dec si
+    mov bl, '-'
+    mov [si], bl
+
+    iprint: mov dx, si
+    mov ah,9
+    int 21h
+
+    mov dl, ' '
+    mov ah,2
+    int 21h
+
+    mov ax, 0
+
+    ret
+iafisare endp
+
+afisare proc
+    mov si, offset buffer + 9 
+    mov cl, '$' 
+    mov [si], cl
+
     conv:
     dec si
     xor dx, dx
@@ -30,12 +62,6 @@ afisare proc
     mov [si],dl
     cmp ax, 0
     jne conv
-
-    cmp cl, 0
-    je print
-    dec si
-    mov bl, '-'
-    mov [si], bl
 
     print: mov dx, si
     mov ah,9
@@ -54,18 +80,18 @@ main proc
     mov ax, @data
     mov ds, ax
     
-    mov ax, B
-    imul ax
-    mov cx, ax
-    mov ax, A
-    mov bl, 4
-    imul bx
-    mov bx, C
-    imul bx
-    sub cx, ax
-    mov ax, cx
-    call afisare
+    mov ax, 1
 
+    l: mov cx, n
+    cmp cx, 0
+    je p
+    imul cx
+    mov bx, n
+    dec bx
+    mov n, bx
+    jmp l
+
+    p: call afisare
 
 
     final: mov ah,4ch
